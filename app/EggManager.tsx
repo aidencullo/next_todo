@@ -16,7 +16,6 @@ export default function EggManager() {
   
   return (
     <div>
-      <h1>goobye world</h1>
       <div className="flex flex-col gap-2">
         <button onClick={addEgg}>add egg</button>
         <button onClick={removeEgg}>remove egg</button>
