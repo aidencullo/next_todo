@@ -12,16 +12,12 @@ export async function GET() {
     });
 
     await db.exec('CREATE TABLE IF NOT EXISTS eggs (name TEXT)');
-    await db.run('INSERT INTO eggs (name) VALUES (?)', ['scrambled egg']);
-    await db.run('INSERT INTO eggs (name) VALUES (?)', ['fried egg']);
-    await db.run('INSERT INTO eggs (name) VALUES (?)', ['boiled egg']);
-    await db.run('INSERT INTO eggs (name) VALUES (?)', ['poached egg']);
 
     const eggs = await db.all('SELECT name FROM eggs');
 
-    const eggStrings = eggs.map((egg) => egg.name);
+    const eggNames = eggs.map((egg) => egg.name);
 
-    return NextResponse.json(eggStrings);
+    return NextResponse.json(eggNames);
   } catch (error) {
     console.error('Error fetching eggs:', error);
     return NextResponse.json(
@@ -46,8 +42,19 @@ export async function POST(request: Request) {
     // Mock adding egg - replace with actual database operation
     console.log('Adding egg:', egg);
 
+    const db = await open({
+      filename: './eggs.db',
+      driver: sqlite3.Database
+    });
+
+    await db.run('INSERT INTO eggs (name) VALUES (?)', [egg]);
+
+    const eggs = await db.all('SELECT name FROM eggs');
+
+    const eggNames = eggs.map((egg) => egg.name);
+
     return NextResponse.json(
-      { message: 'Egg added successfully', egg },
+      { message: 'Egg added successfully', eggNames },
       { status: 201 }
     );
   } catch (error) {

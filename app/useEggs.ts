@@ -1,6 +1,6 @@
 import { useState, Dispatch, SetStateAction, useEffect } from "react";
 
-export default function useEggs(): [string[]] {
+export default function useEggs(): [string[], () => Promise<void>] {
     const [eggs, setEggs] = useState<string[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
@@ -21,7 +21,7 @@ export default function useEggs(): [string[]] {
     }
 
     const addEgg = async () => {
-        const egg = 'egg';
+        const egg = 'client egg';
         try {
             const res = await fetch('/api/eggs', {
                 method: 'POST',
@@ -41,5 +41,5 @@ export default function useEggs(): [string[]] {
         fetchEggs();
     }, []);
 
-    return [eggs]
+    return [eggs, addEgg]
 }
