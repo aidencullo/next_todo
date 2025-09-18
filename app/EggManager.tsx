@@ -2,14 +2,16 @@
 
 import useEggs from './useEggs';
 import EggList from './EggList';
+import LoadingState from './LoadingState';
+import ErrorState from './ErrorState';
 
 export default function EggManager() {
   const [eggs, addEgg, deleteEggs, loading, error] = useEggs();
   if (loading) {
-    return <div>Loading...</div>;
+    return <LoadingState />;
   }
   if (error) {
-    return <div>Error: {error}</div>;
+    return <ErrorState error={error} />;
   }
 
   return (
