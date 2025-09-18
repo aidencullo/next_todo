@@ -1,6 +1,8 @@
-import { useState, Dispatch, SetStateAction, useEffect } from "react";
+import { useState, useEffect } from "react";
 
-export default function useEggs(): [string[], () => Promise<void>] {
+type functionT = () => Promise<void>;
+
+export default function useEggs(): [string[], functionT, functionT] {
     const [eggs, setEggs] = useState<string[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
@@ -37,9 +39,24 @@ export default function useEggs(): [string[], () => Promise<void>] {
         }
     }
 
+    const deleteEggs = async () => {
+        try {
+            const res = await fetch('/api/eggs', {
+                method: 'DELETE',
+            });
+            if (!res.ok) {
+                throw new Error('Failed to delete eggs');
+            }
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Unknown error');
+        } finally {
+            setLoading(false);
+        }
+    }
+
     useEffect(() => {
         fetchEggs();
     }, []);
 
-    return [eggs, addEgg]
+    return [eggs, addEgg, deleteEggs]
 }
