@@ -1,6 +1,5 @@
-'use client';
-
 import { useState, useEffect } from 'react';
+import EggPresentation from './EggPresentation';
 
 export default function EggList() {
   const [eggs, setEggs] = useState([]);
@@ -12,12 +11,5 @@ export default function EggList() {
       .catch(err => setEggs([]));
   }, []);
 
-
-  if (eggs.length === 0) return <p>no eggs here</p>;
-
-  return (
-    <ul>
-      {eggs.map((egg, i) => <li key={i}>{egg}</li>)}
-    </ul>
-  );
+  return <EggPresentation eggs={eggs} />;
 }
