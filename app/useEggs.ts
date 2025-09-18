@@ -2,13 +2,14 @@ import { useState, useEffect } from "react";
 
 type functionT = () => Promise<void>;
 
-export default function useEggs(): [string[], functionT, functionT] {
+export default function useEggs(): [string[], functionT, functionT, boolean, string | null] {
     const [eggs, setEggs] = useState<string[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
     const fetchEggs = async () => {
         try {
+            setLoading(true);
             const res = await fetch('/api/eggs');
             if (!res.ok) {
                 throw new Error('Failed to fetch eggs');
@@ -25,6 +26,7 @@ export default function useEggs(): [string[], functionT, functionT] {
     const addEgg = async () => {
         const egg = 'client egg';
         try {
+            setLoading(true);
             const res = await fetch('/api/eggs', {
                 method: 'POST',
                 body: JSON.stringify({ egg }),
@@ -36,11 +38,13 @@ export default function useEggs(): [string[], functionT, functionT] {
             setError(err instanceof Error ? err.message : 'Unknown error');
         } finally {
             setLoading(false);
+            fetchEggs();
         }
     }
 
     const deleteEggs = async () => {
         try {
+            setLoading(true);
             const res = await fetch('/api/eggs', {
                 method: 'DELETE',
             });
@@ -51,6 +55,7 @@ export default function useEggs(): [string[], functionT, functionT] {
             setError(err instanceof Error ? err.message : 'Unknown error');
         } finally {
             setLoading(false);
+            fetchEggs();
         }
     }
 
@@ -58,5 +63,5 @@ export default function useEggs(): [string[], functionT, functionT] {
         fetchEggs();
     }, []);
 
-    return [eggs, addEgg, deleteEggs]
+    return [eggs, addEgg, deleteEggs, loading, error]
 }

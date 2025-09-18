@@ -3,6 +3,11 @@ interface EggListProps {
 }
 
 export default function EggList({ eggs }: EggListProps) {
+
+    if (eggs.length === 0) {
+        return <div>No eggs found</div>;
+    }
+
   return (
     <>
       {eggs.map((egg, index) => (
