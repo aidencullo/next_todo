@@ -13,6 +13,7 @@ export default function useEggs(): [string[]] {
             }
             const data = await res.json();
             setEggs(data);
+            console.log(data);
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Unknown error');
         } finally {

@@ -1,16 +1,27 @@
 import { NextResponse } from 'next/server';
+import { open } from 'sqlite';
+import sqlite3 from 'sqlite3';
 
 export async function GET() {
   try {
-    // Mock data for now - replace with actual database call
-    const eggs = [
-      'scrambled egg',
-      'fried egg',
-      'boiled egg',
-      'poached egg'
-    ];
+    // Query SQLite database for eggs
 
-    return NextResponse.json(eggs);
+    const db = await open({
+      filename: './eggs.db',
+      driver: sqlite3.Database
+    });
+
+    await db.exec('CREATE TABLE IF NOT EXISTS eggs (name TEXT)');
+    await db.run('INSERT INTO eggs (name) VALUES (?)', ['scrambled egg']);
+    await db.run('INSERT INTO eggs (name) VALUES (?)', ['fried egg']);
+    await db.run('INSERT INTO eggs (name) VALUES (?)', ['boiled egg']);
+    await db.run('INSERT INTO eggs (name) VALUES (?)', ['poached egg']);
+
+    const eggs = await db.all('SELECT name FROM eggs');
+
+    const eggStrings = eggs.map((egg) => egg.name);
+
+    return NextResponse.json(eggStrings);
   } catch (error) {
     console.error('Error fetching eggs:', error);
     return NextResponse.json(
