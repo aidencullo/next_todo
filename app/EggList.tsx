@@ -1,15 +1,11 @@
-import { useState, useEffect } from 'react';
+
 import EggPresentation from './EggPresentation';
+import useEggs from './useEggs';
 
 export default function EggList() {
-  const [eggs, setEggs] = useState([]);
+  const { eggs, setEggs, loading } = useEggs()
 
-  useEffect(() => {
-    fetch('/api/eggs')
-      .then(res => res.json())
-      .then(data => setEggs(data))
-      .catch(err => setEggs([]));
-  }, []);
+  if (loading) return <p>loading...</p>;
 
   return <EggPresentation eggs={eggs} />;
 }
