@@ -65,3 +65,33 @@ export async function POST(request: Request) {
     );
   }
 }
+
+export async function DELETE(request: Request) {
+  try {
+
+    // Mock adding egg - replace with actual database operation
+    console.log('Deleting eggs');
+
+    const db = await open({
+      filename: './eggs.db',
+      driver: sqlite3.Database
+    });
+
+    await db.run('DELETE FROM eggs');
+
+    const eggs = await db.all('SELECT name FROM eggs');
+
+    const eggNames = eggs.map((egg) => egg.name);
+
+    return NextResponse.json(
+      { message: 'Egg added successfully', eggNames },
+      { status: 201 }
+    );
+  } catch (error) {
+    console.error('Error adding egg:', error);
+    return NextResponse.json(
+      { error: 'Failed to add egg' },
+      { status: 500 }
+    );
+  }
+}
