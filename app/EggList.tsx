@@ -8,5 +8,5 @@ export default function EggList() {
   if (loading) return <p>loading...</p>;
   if (error) return <p>error: {error}</p>;
 
-//   return <EggPresentation eggs={eggs} />;
+  return <EggPresentation eggs={eggs} />;
 }   

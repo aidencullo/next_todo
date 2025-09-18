@@ -8,19 +8,20 @@ export default function useEggs(): { eggs: string[], setEggs: Dispatch<SetStateA
     const fetchEggs = async () => {
         try {
             const res = await fetch('/api/eggs');
+            if (!res.ok) {
+                throw new Error('Failed to fetch eggs');
+            }
             const data = await res.json();
             setEggs(data);
         } catch (err) {
-            setError(err.message);
+            setError(err instanceof Error ? err.message : 'Unknown error');
+        } finally {
+            setLoading(false);
         }
     }
 
     useEffect(() => {
-        fetch('/api/eggs')
-            .then(res => res.json())
-            .then(data => setEggs(data))
-            .catch(err => setError(err.message))
-            .finally(() => setLoading(false));
+        fetchEggs();
     }, []);
 
     return { eggs, setEggs, loading, error };

@@ -1,11 +1,6 @@
 import { NextResponse } from 'next/server';
 
 export async function GET() {
-    throw new Error('Failed to fetch eggs');
-    return NextResponse.json(
-        { error: 'Failed to fetch eggs' },
-        { status: 500 }
-      );
   try {
     // Mock data for now - replace with actual database call
     const eggs = [
